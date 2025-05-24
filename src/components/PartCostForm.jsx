@@ -19,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 const PartCostForm = ({ setResults }) => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
-        filamentCostPerKg: 10,
+        filamentCostPerKg: 12,
         filamentRequired: 100,
         printingTime: 2,
         laborRate: 10,
@@ -51,11 +51,12 @@ const PartCostForm = ({ setResults }) => {
         }
     }, []);
 
+    useEffect(() => {}, [materials, packaging, extraCommissions]);
+
     const handleChange = (e) => {
-        console.log(formData);
         setFormData({
             ...formData,
-            [e.target.name]: parseFloat(e.target.value),
+            [e.target.name]: e.target.value,
         });
     };
 
@@ -70,8 +71,16 @@ const PartCostForm = ({ setResults }) => {
     const handleItemChange = (index, field, value, setter) => {
         setter((prev) => {
             const updated = [...prev];
-            updated[index][field] =
-                field === "cost" ? parseFloat(value) : value;
+            switch (field) {
+                case "name":
+                    updated[index].name = value.toString();
+                    break;
+                case "cost":
+                    updated[index].cost = parseFloat(value);
+                    break;
+                default:
+                    break;
+            }
             return updated;
         });
     };
@@ -96,12 +105,11 @@ const PartCostForm = ({ setResults }) => {
         const laborCost = (formData.laborTime / 60) * formData.laborRate;
 
         const totalCosts =
-            filamentCost +
-            printingCost +
-            laborCost +
-            materialCost +
-            packagingCost +
-            formData.shippingCost;
+            Number(filamentCost) +
+            Number(printingCost) +
+            Number(materialCost) +
+            Number(packagingCost) +
+            Number(formData.shippingCost);
 
         const marginAmount = totalCosts * (formData.marginPercentage / 100);
 
@@ -111,20 +119,20 @@ const PartCostForm = ({ setResults }) => {
                 return acc + item;
             }, 0);
 
-        const wishedCost = totalCosts + marginAmount;
+        const wishedCost = totalCosts + marginAmount + Number(laborCost);
 
-        const commissionFactor = 1 - percentageToPay / 100;
+        console.log(percentageToPay)
 
-        let commissionAmount;
+        const commissionFactor = (percentageToPay / 100) > 0 ? percentageToPay / 1000 : percentageToPay / 100;
 
-        if (commissionFactor <= 0) {
-            commissionAmount = Infinity;
-        } else {
-            commissionAmount = wishedCost / commissionFactor - wishedCost;
-        }
+        const finalPrice = wishedCost / (1 - commissionFactor)
 
-        const finalPrice =
-            commissionFactor > 0 ? wishedCost / commissionFactor : Infinity;
+        const commissionAmount = finalPrice * commissionFactor;
+
+        console.log(`Monto del Costo + Margen: ${wishedCost}`);
+        console.log(`Porcentaje de la comision: ${commissionFactor}`);
+        console.log(`Monto de la comision: ${commissionAmount}`);
+        console.log(`Precio Final: ${finalPrice}`);
 
         setResults({
             totalCosts: totalCosts.toFixed(2),
@@ -186,7 +194,7 @@ const PartCostForm = ({ setResults }) => {
                         enabled: true,
                         label: "Material",
                         list: materials,
-                        setter: setMaterials,
+                        setter: (e) => setMaterials(e),
                     },
                 },
                 {
@@ -282,8 +290,6 @@ const PartCostForm = ({ setResults }) => {
                                             </Grid>
                                         ) : (
                                             <TextField
-                                                item
-                                                xs={3}
                                                 fullWidth
                                                 label={field.label}
                                                 name={field.name}
@@ -324,7 +330,8 @@ const PartCostForm = ({ setResults }) => {
                                                         idx,
                                                         "name",
                                                         e.target.value,
-                                                        section.setter
+                                                        section.addExtraItems
+                                                            .setter
                                                     )
                                                 }
                                             />
@@ -340,7 +347,8 @@ const PartCostForm = ({ setResults }) => {
                                                         idx,
                                                         "cost",
                                                         e.target.value,
-                                                        section.setter
+                                                        section.addExtraItems
+                                                            .setter
                                                     )
                                                 }
                                             />
@@ -351,7 +359,8 @@ const PartCostForm = ({ setResults }) => {
                                                 onClick={() =>
                                                     handleRemoveItem(
                                                         idx,
-                                                        section.setter
+                                                        section.addExtraItems
+                                                            .setter
                                                     )
                                                 }
                                             >
