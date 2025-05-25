@@ -22,7 +22,7 @@ const PartCostForm = ({ setResults }) => {
         filamentCostPerKg: 12,
         filamentRequired: 100,
         printingTime: 2,
-        laborRate: 10,
+        laborRate: 5,
         laborTime: 0,
         shippingCost: 0,
         marginPercentage: 50,
@@ -86,7 +86,7 @@ const PartCostForm = ({ setResults }) => {
     };
 
     const calculateCosts = () => {
-        const materialCost = materials.reduce(
+        const extraMaterialsCost = materials.reduce(
             (acc, item) => acc + item.cost,
             0
         );
@@ -96,7 +96,7 @@ const PartCostForm = ({ setResults }) => {
             0
         );
 
-        const printingCost =
+        const printingTimeCost =
             formData.printingTime * formData.printingCostPerHour;
 
         const filamentCost =
@@ -104,14 +104,13 @@ const PartCostForm = ({ setResults }) => {
 
         const laborCost = (formData.laborTime / 60) * formData.laborRate;
 
-        const totalCosts =
+        const totalMaterialCosts =
             Number(filamentCost) +
-            Number(printingCost) +
-            Number(materialCost) +
-            Number(packagingCost) +
-            Number(formData.shippingCost);
+            Number(printingTimeCost) +
+            Number(extraMaterialsCost) +
+            Number(packagingCost);
 
-        const marginAmount = totalCosts * (formData.marginPercentage / 100);
+        const marginAmountFromMaterials = totalMaterialCosts * (formData.marginPercentage / 100);
 
         const percentageToPay =
             formData.commissionPercentage +
@@ -119,24 +118,24 @@ const PartCostForm = ({ setResults }) => {
                 return acc + item;
             }, 0);
 
-        const wishedCost = totalCosts + marginAmount + Number(laborCost);
+        const netCost = totalMaterialCosts + marginAmountFromMaterials + Number(laborCost) + Number(formData.shippingCost);;
 
         console.log(percentageToPay)
 
         const commissionFactor = (percentageToPay / 100) > 0 ? percentageToPay / 1000 : percentageToPay / 100;
 
-        const finalPrice = wishedCost / (1 - commissionFactor)
+        const finalPrice = netCost / (1 - commissionFactor)
 
         const commissionAmount = finalPrice * commissionFactor;
 
-        console.log(`Monto del Costo + Margen: ${wishedCost}`);
+        console.log(`Monto del Costo + Margen: ${netCost}`);
         console.log(`Porcentaje de la comision: ${commissionFactor}`);
         console.log(`Monto de la comision: ${commissionAmount}`);
         console.log(`Precio Final: ${finalPrice}`);
 
         setResults({
-            totalCosts: totalCosts.toFixed(2),
-            marginAmount: marginAmount.toFixed(2),
+            totalCosts: totalMaterialCosts.toFixed(2),
+            marginAmount: marginAmountFromMaterials.toFixed(2),
             commissionAmount: isFinite(commissionAmount)
                 ? commissionAmount.toFixed(2)
                 : "La comision es igual o mayor a la suma del costo y beneficio.",
