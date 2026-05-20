@@ -16,6 +16,27 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { useNavigate } from "react-router-dom";
 
+const PERSIST_KEY = "resinCostFormConfig";
+
+const PERSISTENT_FIELDS = [
+    "resinPricePerLiter",
+    "fepPrice",
+    "fepLifespanPrints",
+    "glovePrice",
+    "wipesCost",
+    "ipaPricePerLiter",
+    "ipamlPerWash",
+    "washStationWatts",
+    "washTimeMin",
+    "curingStationWatts",
+    "curingTimeMin",
+    "electricityPrice",
+    "laborRate",
+    "overheadPercent",
+    "marginPercentage",
+    "commissionPercentage",
+];
+
 const ResinCostForm = ({ setResults }) => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
@@ -48,17 +69,25 @@ const ResinCostForm = ({ setResults }) => {
     const [extraCommissions, setExtraCommissions] = useState([]);
 
     useEffect(() => {
-        const savedCost = localStorage.getItem("resinPrinterCostPerHour");
-        if (savedCost !== null && savedCost.trim() !== "" && !isNaN(savedCost)) {
-            setFormData((prev) => ({
-                ...prev,
-                resinPrinterCostPerHour: parseFloat(savedCost),
-            }));
-        }
+        const saved = JSON.parse(localStorage.getItem(PERSIST_KEY) || "{}");
+        const printerCost = localStorage.getItem("resinPrinterCostPerHour");
+        setFormData((prev) => ({
+            ...prev,
+            ...saved,
+            ...(printerCost && !isNaN(printerCost)
+                ? { resinPrinterCostPerHour: parseFloat(printerCost) }
+                : {}),
+        }));
     }, []);
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+        if (PERSISTENT_FIELDS.includes(name)) {
+            const saved = JSON.parse(localStorage.getItem(PERSIST_KEY) || "{}");
+            saved[name] = value;
+            localStorage.setItem(PERSIST_KEY, JSON.stringify(saved));
+        }
     };
 
     const handleAddItem = (setter) => {
