@@ -210,10 +210,20 @@ const ResinCostForm = ({ setResults }) => {
 
     const sections = [
         {
-            title: "Resina",
+            title: "Costo de Pieza",
             fields: [
                 { label: "Precio de Resina ($/litro)", name: "resinPricePerLiter" },
                 { label: "Resina Usada (ml)", name: "resinMlUsed" },
+                { label: "Tiempo de Impresión (horas)", name: "printHours" },
+                {
+                    label: "Costo de Impresora por Hora ($)",
+                    value: formData.resinPrinterCostPerHour,
+                    disabled: true,
+                    info: {
+                        title: "Clic aquí para calcular el costo por hora de tu impresora de resina",
+                        redirect: "/resina-costo-impresora",
+                    },
+                },
                 {
                     label: "Merma y Fallos (%)",
                     value: formData.failureRate,
@@ -226,10 +236,17 @@ const ResinCostForm = ({ setResults }) => {
             ],
         },
         {
-            title: "Consumibles por Pieza",
+            title: "Consumibles y Post-procesado",
             fields: [
                 { label: "Precio de Guantes ($ / par)", name: "glovePrice" },
                 { label: "Toallas / Insumos ($ / sesión)", name: "wipesCost" },
+                { label: "Precio IPA ($/litro)", name: "ipaPricePerLiter" },
+                { label: "IPA por Lavado (ml)", name: "ipamlPerWash" },
+                { label: "Watts Wash Station (0 si manual)", name: "washStationWatts" },
+                { label: "Tiempo de Lavado (min)", name: "washTimeMin" },
+                { label: "Watts Curing Station", name: "curingStationWatts" },
+                { label: "Tiempo de Curado (min)", name: "curingTimeMin" },
+                { label: "Precio Electricidad ($/kWh)", name: "electricityPrice" },
             ],
             addExtraItems: {
                 enabled: true,
@@ -239,34 +256,7 @@ const ResinCostForm = ({ setResults }) => {
             },
         },
         {
-            title: "Post-procesado",
-            fields: [
-                { label: "Precio IPA ($/litro)", name: "ipaPricePerLiter" },
-                { label: "IPA por Lavado (ml)", name: "ipamlPerWash" },
-                { label: "Watts Wash Station (0 si manual)", name: "washStationWatts" },
-                { label: "Tiempo de Lavado (min)", name: "washTimeMin" },
-                { label: "Watts Curing Station", name: "curingStationWatts" },
-                { label: "Tiempo de Curado (min)", name: "curingTimeMin" },
-                { label: "Precio Electricidad ($/kWh)", name: "electricityPrice" },
-            ],
-        },
-        {
-            title: "Tiempo de Impresión",
-            fields: [
-                { label: "Tiempo de Impresión (horas)", name: "printHours" },
-                {
-                    label: "Costo de Impresora por Hora ($)",
-                    value: formData.resinPrinterCostPerHour,
-                    disabled: true,
-                    info: {
-                        title: "Clic aquí para calcular el costo por hora de tu impresora de resina",
-                        redirect: "/resina-costo-impresora",
-                    },
-                },
-            ],
-        },
-        {
-            title: "Mano de Obra",
+            title: "Costo de Mano de Obra",
             fields: [
                 { label: "Tarifa de Mano de Obra ($/hora)", name: "laborRate" },
                 { label: "Tiempo de Preparación (min)", name: "prepTimeMin" },
@@ -274,13 +264,7 @@ const ResinCostForm = ({ setResults }) => {
             ],
         },
         {
-            title: "Buffer de Overhead",
-            fields: [
-                { label: "Buffer de Gastos Generales (%)", name: "overheadPercent" },
-            ],
-        },
-        {
-            title: "Envío y Packaging",
+            title: "Costo de Envío",
             additionalField: {
                 label: "Costo de Envío ($)",
                 name: "shippingCost",
@@ -296,6 +280,7 @@ const ResinCostForm = ({ setResults }) => {
             title: "Margen de Ganancia",
             fields: [
                 { label: "Porcentaje de Margen (%)", name: "marginPercentage" },
+                { label: "Buffer de Overhead (%)", name: "overheadPercent" },
             ],
         },
         {
