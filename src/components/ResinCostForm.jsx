@@ -224,15 +224,6 @@ const ResinCostForm = ({ setResults }) => {
                         redirect: "/resina-costo-impresora",
                     },
                 },
-                {
-                    label: "Merma y Fallos (%)",
-                    value: formData.failureRate,
-                    disabled: true,
-                    info: {
-                        title: "Configurar merma en Costo Impresora",
-                        redirect: "/resina-costo-impresora",
-                    },
-                },
             ],
         },
         {
