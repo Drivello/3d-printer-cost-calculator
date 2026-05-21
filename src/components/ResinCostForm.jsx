@@ -20,8 +20,6 @@ const PERSIST_KEY = "resinCostFormConfig";
 
 const PERSISTENT_FIELDS = [
     "resinPricePerLiter",
-    "fepPrice",
-    "fepLifespanPrints",
     "glovePrice",
     "wipesCost",
     "ipaPricePerLiter",
@@ -43,8 +41,7 @@ const ResinCostForm = ({ setResults }) => {
         resinPricePerLiter: 45,
         resinMlUsed: 50,
         wastePercent: 15,
-        fepPrice: 10,
-        fepLifespanPrints: 50,
+        resinFepCostPerPrint: 0.2,
         glovePrice: 0.3,
         wipesCost: 0.2,
         ipaPricePerLiter: 5,
@@ -72,6 +69,7 @@ const ResinCostForm = ({ setResults }) => {
     useEffect(() => {
         const saved = JSON.parse(localStorage.getItem(PERSIST_KEY) || "{}");
         const printerCost = localStorage.getItem("resinPrinterCostPerHour");
+        const fepCost = localStorage.getItem("resinFepCostPerPrint");
         const savedConsumables = JSON.parse(
             localStorage.getItem("resinExtraConsumables") || "[]"
         );
@@ -80,6 +78,9 @@ const ResinCostForm = ({ setResults }) => {
             ...saved,
             ...(printerCost && !isNaN(printerCost)
                 ? { resinPrinterCostPerHour: parseFloat(printerCost) }
+                : {}),
+            ...(fepCost && !isNaN(fepCost)
+                ? { resinFepCostPerPrint: parseFloat(fepCost) }
                 : {}),
         }));
         if (savedConsumables.length > 0) setExtraConsumables(savedConsumables);
@@ -125,7 +126,7 @@ const ResinCostForm = ({ setResults }) => {
             formData.resinMlUsed *
             (1 + formData.wastePercent / 100);
 
-        const fepCostPerPrint = formData.fepPrice / formData.fepLifespanPrints;
+        const fepCostPerPrint = Number(formData.resinFepCostPerPrint);
         const extraConsumablesCost = extraConsumables.reduce(
             (acc, item) => acc + (parseFloat(item.cost) || 0),
             0
@@ -222,8 +223,15 @@ const ResinCostForm = ({ setResults }) => {
         {
             title: "Consumibles por Pieza",
             fields: [
-                { label: "Precio del FEP ($ / sheet)", name: "fepPrice" },
-                { label: "Vida Útil del FEP (prints)", name: "fepLifespanPrints" },
+                {
+                    label: "Costo de FEP por Print ($)",
+                    value: formData.resinFepCostPerPrint,
+                    disabled: true,
+                    info: {
+                        title: "Clic aquí para configurar el FEP en Costo Impresora",
+                        redirect: "/resina-costo-impresora",
+                    },
+                },
                 { label: "Precio de Guantes ($ / par)", name: "glovePrice" },
                 { label: "Toallas / Insumos ($ / sesión)", name: "wipesCost" },
             ],

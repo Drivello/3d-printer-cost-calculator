@@ -8,6 +8,8 @@ const ResinPrinterCostForm = ({ setResults }) => {
         monthlyHours: 100,
         uvScreenPrice: 60,
         uvScreenLifeHours: 1500,
+        fepPrice: 10,
+        fepLifespanPrints: 50,
         annualMaintenanceCost: 30,
         electricityPrice: 0.15,
         printerPowerKWh: 0.05,
@@ -36,6 +38,7 @@ const ResinPrinterCostForm = ({ setResults }) => {
         const hoursUntilRecovery = formData.monthlyHours * formData.recoveryMonths;
         const recoveryCostPerHour = formData.printerValue / hoursUntilRecovery;
         const uvScreenCostPerHour = formData.uvScreenPrice / formData.uvScreenLifeHours;
+        const fepCostPerPrint = formData.fepPrice / formData.fepLifespanPrints;
         const yearlyHours = formData.monthlyHours * 12;
         const maintenanceCostPerHour = formData.annualMaintenanceCost / yearlyHours;
         const electricityCostPerHour = formData.printerPowerKWh * formData.electricityPrice;
@@ -49,6 +52,7 @@ const ResinPrinterCostForm = ({ setResults }) => {
             hoursUntilRecovery: hoursUntilRecovery.toFixed(0),
             recoveryCostPerHour: recoveryCostPerHour.toFixed(4),
             uvScreenCostPerHour: uvScreenCostPerHour.toFixed(4),
+            fepCostPerPrint: fepCostPerPrint.toFixed(4),
             maintenanceCostPerHour: maintenanceCostPerHour.toFixed(4),
             electricityCostPerHour: electricityCostPerHour.toFixed(4),
             totalCostPerHour: totalCostPerHour.toFixed(4),
@@ -63,6 +67,8 @@ const ResinPrinterCostForm = ({ setResults }) => {
                 { label: "Horas de Uso Estimadas por Mes", name: "monthlyHours" },
                 { label: "Precio de Pantalla UV ($)", name: "uvScreenPrice" },
                 { label: "Vida Útil de Pantalla UV (horas)", name: "uvScreenLifeHours" },
+                { label: "Precio del FEP ($ / sheet)", name: "fepPrice" },
+                { label: "Vida Útil del FEP (prints)", name: "fepLifespanPrints" },
                 { label: "Mantenimiento Anual ($)", name: "annualMaintenanceCost" },
                 { label: "Precio de Electricidad ($/kWh)", name: "electricityPrice" },
                 { label: "Consumo de la Impresora (kWh/hora)", name: "printerPowerKWh" },
