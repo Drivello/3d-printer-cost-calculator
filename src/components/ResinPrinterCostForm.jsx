@@ -15,6 +15,8 @@ const ResinPrinterCostForm = ({ setResults }) => {
         annualMaintenanceCost: 30,
         electricityPrice: 0.15,
         printerPowerKWh: 0.05,
+        washStationWatts: 0,
+        curingStationWatts: 20,
     });
 
     const handleChange = (e) => {
@@ -61,6 +63,9 @@ const ResinPrinterCostForm = ({ setResults }) => {
             electricityCostPerHour: electricityCostPerHour.toFixed(4),
             totalCostPerHour: totalCostPerHour.toFixed(4),
             failureRate: formData.failureRate,
+            electricityPrice: formData.electricityPrice,
+            washStationWatts: formData.washStationWatts,
+            curingStationWatts: formData.curingStationWatts,
         });
     };
 
@@ -79,6 +84,8 @@ const ResinPrinterCostForm = ({ setResults }) => {
                 { label: "Mantenimiento Anual ($)", name: "annualMaintenanceCost" },
                 { label: "Precio de Electricidad ($/kWh)", name: "electricityPrice" },
                 { label: "Consumo de la Impresora (kWh/hora)", name: "printerPowerKWh" },
+                { label: "Watts Wash Station (0 si manual)", name: "washStationWatts" },
+                { label: "Watts Curing Station", name: "curingStationWatts" },
             ].map((field) => (
                 <Grid item xs={6} key={field.name}>
                     <TextField

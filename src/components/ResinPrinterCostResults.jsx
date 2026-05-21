@@ -20,6 +20,9 @@ const ResinPrinterCostResults = ({ results }) => {
     const saveToLocalStorage = () => {
         localStorage.setItem("resinPrinterCostPerHour", customCost);
         localStorage.setItem("resinFailureRate", results.failureRate);
+        localStorage.setItem("resinElectricityPrice", results.electricityPrice);
+        localStorage.setItem("resinWashStationWatts", results.washStationWatts);
+        localStorage.setItem("resinCuringStationWatts", results.curingStationWatts);
         alert(`Costo guardado: $${customCost} por hora`);
         navigate("/resina");
     };

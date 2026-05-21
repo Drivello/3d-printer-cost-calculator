@@ -24,11 +24,8 @@ const PERSISTENT_FIELDS = [
     "wipesCost",
     "ipaPricePerLiter",
     "ipamlPerWash",
-    "washStationWatts",
     "washTimeMin",
-    "curingStationWatts",
     "curingTimeMin",
-    "electricityPrice",
     "laborRate",
     "overheadPercent",
     "marginPercentage",
@@ -69,6 +66,9 @@ const ResinCostForm = ({ setResults }) => {
         const saved = JSON.parse(localStorage.getItem(PERSIST_KEY) || "{}");
         const printerCost = localStorage.getItem("resinPrinterCostPerHour");
         const failureRate = localStorage.getItem("resinFailureRate");
+        const electricityPrice = localStorage.getItem("resinElectricityPrice");
+        const washStationWatts = localStorage.getItem("resinWashStationWatts");
+        const curingStationWatts = localStorage.getItem("resinCuringStationWatts");
         const savedConsumables = JSON.parse(
             localStorage.getItem("resinExtraConsumables") || "[]"
         );
@@ -80,6 +80,15 @@ const ResinCostForm = ({ setResults }) => {
                 : {}),
             ...(failureRate && !isNaN(failureRate)
                 ? { failureRate: parseFloat(failureRate) }
+                : {}),
+            ...(electricityPrice && !isNaN(electricityPrice)
+                ? { electricityPrice: parseFloat(electricityPrice) }
+                : {}),
+            ...(washStationWatts && !isNaN(washStationWatts)
+                ? { washStationWatts: parseFloat(washStationWatts) }
+                : {}),
+            ...(curingStationWatts && !isNaN(curingStationWatts)
+                ? { curingStationWatts: parseFloat(curingStationWatts) }
                 : {}),
         }));
         if (savedConsumables.length > 0) setExtraConsumables(savedConsumables);
@@ -233,11 +242,8 @@ const ResinCostForm = ({ setResults }) => {
                 { label: "Toallas / Insumos ($ / sesión)", name: "wipesCost" },
                 { label: "Precio IPA ($/litro)", name: "ipaPricePerLiter" },
                 { label: "IPA por Lavado (ml)", name: "ipamlPerWash" },
-                { label: "Watts Wash Station (0 si manual)", name: "washStationWatts" },
                 { label: "Tiempo de Lavado (min)", name: "washTimeMin" },
-                { label: "Watts Curing Station", name: "curingStationWatts" },
                 { label: "Tiempo de Curado (min)", name: "curingTimeMin" },
-                { label: "Precio Electricidad ($/kWh)", name: "electricityPrice" },
             ],
             addExtraItems: {
                 enabled: true,
