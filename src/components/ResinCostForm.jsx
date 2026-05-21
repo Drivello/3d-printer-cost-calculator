@@ -40,8 +40,7 @@ const ResinCostForm = ({ setResults }) => {
     const [formData, setFormData] = useState({
         resinPricePerLiter: 45,
         resinMlUsed: 50,
-        wastePercent: 15,
-        resinFepCostPerPrint: 0.2,
+        failureRate: 15,
         glovePrice: 0.3,
         wipesCost: 0.2,
         ipaPricePerLiter: 5,
@@ -69,7 +68,7 @@ const ResinCostForm = ({ setResults }) => {
     useEffect(() => {
         const saved = JSON.parse(localStorage.getItem(PERSIST_KEY) || "{}");
         const printerCost = localStorage.getItem("resinPrinterCostPerHour");
-        const fepCost = localStorage.getItem("resinFepCostPerPrint");
+        const failureRate = localStorage.getItem("resinFailureRate");
         const savedConsumables = JSON.parse(
             localStorage.getItem("resinExtraConsumables") || "[]"
         );
@@ -79,8 +78,8 @@ const ResinCostForm = ({ setResults }) => {
             ...(printerCost && !isNaN(printerCost)
                 ? { resinPrinterCostPerHour: parseFloat(printerCost) }
                 : {}),
-            ...(fepCost && !isNaN(fepCost)
-                ? { resinFepCostPerPrint: parseFloat(fepCost) }
+            ...(failureRate && !isNaN(failureRate)
+                ? { failureRate: parseFloat(failureRate) }
                 : {}),
         }));
         if (savedConsumables.length > 0) setExtraConsumables(savedConsumables);
@@ -124,15 +123,13 @@ const ResinCostForm = ({ setResults }) => {
         const resinCost =
             (formData.resinPricePerLiter / 1000) *
             formData.resinMlUsed *
-            (1 + formData.wastePercent / 100);
+            (1 + formData.failureRate / 100);
 
-        const fepCostPerPrint = Number(formData.resinFepCostPerPrint);
         const extraConsumablesCost = extraConsumables.reduce(
             (acc, item) => acc + (parseFloat(item.cost) || 0),
             0
         );
         const consumablesCost =
-            fepCostPerPrint +
             Number(formData.glovePrice) +
             Number(formData.wipesCost) +
             extraConsumablesCost;
@@ -217,21 +214,20 @@ const ResinCostForm = ({ setResults }) => {
             fields: [
                 { label: "Precio de Resina ($/litro)", name: "resinPricePerLiter" },
                 { label: "Resina Usada (ml)", name: "resinMlUsed" },
-                { label: "Merma — Soportes y Fallos (%)", name: "wastePercent" },
+                {
+                    label: "Merma y Fallos (%)",
+                    value: formData.failureRate,
+                    disabled: true,
+                    info: {
+                        title: "Configurar merma en Costo Impresora",
+                        redirect: "/resina-costo-impresora",
+                    },
+                },
             ],
         },
         {
             title: "Consumibles por Pieza",
             fields: [
-                {
-                    label: "Costo de FEP por Print ($)",
-                    value: formData.resinFepCostPerPrint,
-                    disabled: true,
-                    info: {
-                        title: "Clic aquí para configurar el FEP en Costo Impresora",
-                        redirect: "/resina-costo-impresora",
-                    },
-                },
                 { label: "Precio de Guantes ($ / par)", name: "glovePrice" },
                 { label: "Toallas / Insumos ($ / sesión)", name: "wipesCost" },
             ],

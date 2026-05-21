@@ -19,7 +19,7 @@ const ResinPrinterCostResults = ({ results }) => {
 
     const saveToLocalStorage = () => {
         localStorage.setItem("resinPrinterCostPerHour", customCost);
-        localStorage.setItem("resinFepCostPerPrint", results.fepCostPerPrint);
+        localStorage.setItem("resinFailureRate", results.failureRate);
         alert(`Costo guardado: $${customCost} por hora`);
         navigate("/resina");
     };
@@ -37,7 +37,10 @@ const ResinPrinterCostResults = ({ results }) => {
                 Desgaste de Pantalla UV por Hora: ${results.uvScreenCostPerHour}
             </Typography>
             <Typography variant="body1">
-                Costo de FEP por Print: ${results.fepCostPerPrint}
+                Desgaste de FEP por Hora: ${results.fepCostPerHour}
+            </Typography>
+            <Typography variant="body1">
+                Tasa de Merma y Fallos: {results.failureRate}%
             </Typography>
             <Typography variant="body1">
                 Mantenimiento por Hora: ${results.maintenanceCostPerHour}
