@@ -67,10 +67,14 @@ const ResinCostForm = ({ setResults }) => {
 
     const [packaging, setPackaging] = useState([]);
     const [extraCommissions, setExtraCommissions] = useState([]);
+    const [extraConsumables, setExtraConsumables] = useState([]);
 
     useEffect(() => {
         const saved = JSON.parse(localStorage.getItem(PERSIST_KEY) || "{}");
         const printerCost = localStorage.getItem("resinPrinterCostPerHour");
+        const savedConsumables = JSON.parse(
+            localStorage.getItem("resinExtraConsumables") || "[]"
+        );
         setFormData((prev) => ({
             ...prev,
             ...saved,
@@ -78,7 +82,15 @@ const ResinCostForm = ({ setResults }) => {
                 ? { resinPrinterCostPerHour: parseFloat(printerCost) }
                 : {}),
         }));
+        if (savedConsumables.length > 0) setExtraConsumables(savedConsumables);
     }, []);
+
+    useEffect(() => {
+        localStorage.setItem(
+            "resinExtraConsumables",
+            JSON.stringify(extraConsumables)
+        );
+    }, [extraConsumables]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -114,10 +126,15 @@ const ResinCostForm = ({ setResults }) => {
             (1 + formData.wastePercent / 100);
 
         const fepCostPerPrint = formData.fepPrice / formData.fepLifespanPrints;
+        const extraConsumablesCost = extraConsumables.reduce(
+            (acc, item) => acc + (parseFloat(item.cost) || 0),
+            0
+        );
         const consumablesCost =
             fepCostPerPrint +
             Number(formData.glovePrice) +
-            Number(formData.wipesCost);
+            Number(formData.wipesCost) +
+            extraConsumablesCost;
 
         const ipaCost =
             (formData.ipaPricePerLiter / 1000) * formData.ipamlPerWash;
@@ -210,6 +227,12 @@ const ResinCostForm = ({ setResults }) => {
                 { label: "Precio de Guantes ($ / par)", name: "glovePrice" },
                 { label: "Toallas / Insumos ($ / sesión)", name: "wipesCost" },
             ],
+            addExtraItems: {
+                enabled: true,
+                label: "Consumible",
+                list: extraConsumables,
+                setter: setExtraConsumables,
+            },
         },
         {
             title: "Post-procesado",
