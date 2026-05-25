@@ -10,7 +10,7 @@ const PrinterUsageCostPage = () => {
         <Container maxWidth="md" sx={{ mt: 4 }}>
             <Paper elevation={3} sx={{ p: 4 }}>
                 <Typography variant="h4" gutterBottom>
-                    Calculadora de Costo de Uso por Hora
+                    FDM Costo por hora
                 </Typography>
 
                 {/* Formulario para ingresar datos */}

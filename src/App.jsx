@@ -8,7 +8,7 @@ import ResinPrinterCostPage from "./pages/ResinPrinterCostPage";
 
 const navLinks = [
     { label: "FDM — Precio de Pieza", to: "/" },
-    { label: "FDM — Costo Impresora", to: "/printer-usage-cost-calculator" },
+    { label: "FDM — Costo por Hora", to: "/printer-usage-cost-calculator" },
     { label: "Resina — Precio de Pieza", to: "/resina" },
     { label: "Resina — Costo por Hora", to: "/resina-costo-impresora" },
 ];
