@@ -37,22 +37,25 @@ const ResinPrinterCostResults = ({ results }) => {
                 Amortización Impresora por Hora: ${results.recoveryCostPerHour}
             </Typography>
             <Typography variant="body1">
+                Pantalla UV por Hora: ${results.uvScreenCostPerHour}
+            </Typography>
+            <Typography variant="body1">
+                FEP por Hora: ${results.fepCostPerHour}
+            </Typography>
+            <Typography variant="body1">
+                Mantenimiento Impresora por Hora: ${results.maintenanceCostPerHour}
+            </Typography>
+            <Typography variant="body1">
+                Electricidad por Hora: ${results.printerElectricityCostPerHour}
+            </Typography>
+            <Typography variant="body1">
                 Amortización Wash+Cure Station por Hora: ${results.washCureRecoveryCostPerHour}
             </Typography>
             <Typography variant="body1">
-                Desgaste de Pantalla UV por Hora: ${results.uvScreenCostPerHour}
+                Mantenimiento Station por Hora: ${results.stationMaintenanceCostPerHour}
             </Typography>
             <Typography variant="body1">
-                Desgaste de FEP por Hora: ${results.fepCostPerHour}
-            </Typography>
-            <Typography variant="body1">
-                Tasa de Merma y Fallos: {results.failureRate}%
-            </Typography>
-            <Typography variant="body1">
-                Mantenimiento por Hora: ${results.maintenanceCostPerHour}
-            </Typography>
-            <Typography variant="body1">
-                Electricidad por Hora: ${results.electricityCostPerHour}
+                Merma y Fallos: {results.failureRate}%
             </Typography>
 
             <Typography variant="h5" sx={{ mt: 2, color: "green" }}>
