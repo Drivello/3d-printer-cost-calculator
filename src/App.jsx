@@ -10,7 +10,7 @@ const navLinks = [
     { label: "FDM — Precio de Pieza", to: "/" },
     { label: "FDM — Costo Impresora", to: "/printer-usage-cost-calculator" },
     { label: "Resina — Precio de Pieza", to: "/resina" },
-    { label: "Resina — Costo Impresora", to: "/resina-costo-impresora" },
+    { label: "Resina — Costo por Hora", to: "/resina-costo-impresora" },
 ];
 
 const Nav = () => {

@@ -10,7 +10,7 @@ const ResinPrinterCostPage = () => {
         <Container maxWidth="md" sx={{ mt: 4 }}>
             <Paper elevation={3} sx={{ p: 4 }}>
                 <Typography variant="h4" gutterBottom>
-                    Costo por Hora — Impresora de Resina
+                    Resina Costo por hora
                 </Typography>
 
                 <ResinPrinterCostForm setResults={setWearResults} />
