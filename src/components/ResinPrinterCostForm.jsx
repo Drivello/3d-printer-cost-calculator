@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { TextField, Button, Grid } from "@mui/material";
+import {
+    Accordion,
+    AccordionSummary,
+    AccordionDetails,
+    TextField,
+    Button,
+    Typography,
+    Grid,
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const ResinPrinterCostForm = ({ setResults }) => {
     const [formData, setFormData] = useState({
@@ -12,10 +21,10 @@ const ResinPrinterCostForm = ({ setResults }) => {
         fepLifespanPrints: 50,
         avgPrintHours: 4,
         failureRate: 15,
-        washCureStationValue: 50,
         annualMaintenanceCost: 30,
         electricityPrice: 0.15,
         printerPowerKWh: 0.05,
+        washCureStationValue: 0,
         washStationWatts: 0,
         curingStationWatts: 20,
     });
@@ -42,7 +51,7 @@ const ResinPrinterCostForm = ({ setResults }) => {
 
         const hoursUntilRecovery = formData.monthlyHours * formData.recoveryMonths;
         const recoveryCostPerHour = formData.printerValue / hoursUntilRecovery;
-        const washCureRecoveryCostPerHour = formData.washCureStationValue / hoursUntilRecovery;
+        const washCureRecoveryCostPerHour = (formData.washCureStationValue || 0) / hoursUntilRecovery;
         const uvScreenCostPerHour = formData.uvScreenPrice / formData.uvScreenLifeHours;
         const fepCostPerPrint = formData.fepPrice / formData.fepLifespanPrints;
         const fepCostPerHour = fepCostPerPrint / formData.avgPrintHours;
@@ -73,9 +82,10 @@ const ResinPrinterCostForm = ({ setResults }) => {
         });
     };
 
-    return (
-        <Grid container spacing={2}>
-            {[
+    const sections = [
+        {
+            title: "Impresora",
+            fields: [
                 { label: "Valor de la Impresora ($)", name: "printerValue" },
                 { label: "Tiempo para Recuperar Inversión (meses)", name: "recoveryMonths" },
                 { label: "Horas de Uso Estimadas por Mes", name: "monthlyHours" },
@@ -85,35 +95,57 @@ const ResinPrinterCostForm = ({ setResults }) => {
                 { label: "Vida Útil del FEP (prints)", name: "fepLifespanPrints" },
                 { label: "Duración Promedio de Impresión (horas)", name: "avgPrintHours" },
                 { label: "Tasa de Merma y Fallos (%)", name: "failureRate" },
-                { label: "Valor Wash+Cure Station ($)", name: "washCureStationValue" },
                 { label: "Mantenimiento Anual ($)", name: "annualMaintenanceCost" },
                 { label: "Precio de Electricidad ($/kWh)", name: "electricityPrice" },
                 { label: "Consumo de la Impresora (kWh/hora)", name: "printerPowerKWh" },
-                { label: "Watts Wash Station (0 si manual)", name: "washStationWatts" },
+            ],
+        },
+        {
+            title: "Wash + Cure Station (opcional)",
+            fields: [
+                { label: "Valor de la Station ($)", name: "washCureStationValue" },
+                { label: "Watts Wash Station", name: "washStationWatts" },
                 { label: "Watts Curing Station", name: "curingStationWatts" },
-            ].map((field) => (
-                <Grid item xs={6} key={field.name}>
-                    <TextField
-                        fullWidth
-                        label={field.label}
-                        name={field.name}
-                        type="number"
-                        value={formData[field.name]}
-                        onChange={handleChange}
-                    />
-                </Grid>
+            ],
+        },
+    ];
+
+    return (
+        <>
+            {sections.map((section, index) => (
+                <Accordion key={index} defaultExpanded={index === 0}>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                        <Typography variant="h6">{section.title}</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <Grid container spacing={2}>
+                            {section.fields.map((field) => (
+                                <Grid item xs={6} key={field.name}>
+                                    <TextField
+                                        fullWidth
+                                        label={field.label}
+                                        name={field.name}
+                                        type="number"
+                                        value={formData[field.name]}
+                                        onChange={handleChange}
+                                    />
+                                </Grid>
+                            ))}
+                        </Grid>
+                    </AccordionDetails>
+                </Accordion>
             ))}
-            <Grid item xs={12}>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                    onClick={calculateCost}
-                >
-                    Calcular Costo por Hora
-                </Button>
-            </Grid>
-        </Grid>
+
+            <Button
+                variant="contained"
+                color="primary"
+                fullWidth
+                sx={{ mt: 2 }}
+                onClick={calculateCost}
+            >
+                Calcular Costo por Hora
+            </Button>
+        </>
     );
 };
 
