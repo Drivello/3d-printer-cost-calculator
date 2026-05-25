@@ -12,6 +12,7 @@ const ResinPrinterCostForm = ({ setResults }) => {
         fepLifespanPrints: 50,
         avgPrintHours: 4,
         failureRate: 15,
+        washCureStationValue: 50,
         annualMaintenanceCost: 30,
         electricityPrice: 0.15,
         printerPowerKWh: 0.05,
@@ -41,6 +42,7 @@ const ResinPrinterCostForm = ({ setResults }) => {
 
         const hoursUntilRecovery = formData.monthlyHours * formData.recoveryMonths;
         const recoveryCostPerHour = formData.printerValue / hoursUntilRecovery;
+        const washCureRecoveryCostPerHour = formData.washCureStationValue / hoursUntilRecovery;
         const uvScreenCostPerHour = formData.uvScreenPrice / formData.uvScreenLifeHours;
         const fepCostPerPrint = formData.fepPrice / formData.fepLifespanPrints;
         const fepCostPerHour = fepCostPerPrint / formData.avgPrintHours;
@@ -49,6 +51,7 @@ const ResinPrinterCostForm = ({ setResults }) => {
         const electricityCostPerHour = formData.printerPowerKWh * formData.electricityPrice;
         const totalCostPerHour =
             recoveryCostPerHour +
+            washCureRecoveryCostPerHour +
             uvScreenCostPerHour +
             fepCostPerHour +
             maintenanceCostPerHour +
@@ -57,6 +60,7 @@ const ResinPrinterCostForm = ({ setResults }) => {
         setResults({
             hoursUntilRecovery: hoursUntilRecovery.toFixed(0),
             recoveryCostPerHour: recoveryCostPerHour.toFixed(4),
+            washCureRecoveryCostPerHour: washCureRecoveryCostPerHour.toFixed(4),
             uvScreenCostPerHour: uvScreenCostPerHour.toFixed(4),
             fepCostPerHour: fepCostPerHour.toFixed(4),
             maintenanceCostPerHour: maintenanceCostPerHour.toFixed(4),
@@ -81,6 +85,7 @@ const ResinPrinterCostForm = ({ setResults }) => {
                 { label: "Vida Útil del FEP (prints)", name: "fepLifespanPrints" },
                 { label: "Duración Promedio de Impresión (horas)", name: "avgPrintHours" },
                 { label: "Tasa de Merma y Fallos (%)", name: "failureRate" },
+                { label: "Valor Wash+Cure Station ($)", name: "washCureStationValue" },
                 { label: "Mantenimiento Anual ($)", name: "annualMaintenanceCost" },
                 { label: "Precio de Electricidad ($/kWh)", name: "electricityPrice" },
                 { label: "Consumo de la Impresora (kWh/hora)", name: "printerPowerKWh" },

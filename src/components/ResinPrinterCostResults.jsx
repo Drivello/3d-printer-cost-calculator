@@ -34,7 +34,10 @@ const ResinPrinterCostResults = ({ results }) => {
                 Horas Totales para Recuperación: {results.hoursUntilRecovery} horas
             </Typography>
             <Typography variant="body1">
-                Costo de Recuperación por Hora: ${results.recoveryCostPerHour}
+                Amortización Impresora por Hora: ${results.recoveryCostPerHour}
+            </Typography>
+            <Typography variant="body1">
+                Amortización Wash+Cure Station por Hora: ${results.washCureRecoveryCostPerHour}
             </Typography>
             <Typography variant="body1">
                 Desgaste de Pantalla UV por Hora: ${results.uvScreenCostPerHour}
