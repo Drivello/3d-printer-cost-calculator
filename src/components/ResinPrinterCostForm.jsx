@@ -12,7 +12,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const ResinPrinterCostForm = ({ setResults }) => {
     const [formData, setFormData] = useState({
-        printerValue: 300,
+        printerValue: 900,
         recoveryMonths: 12,
         monthlyHours: 100,
         uvScreenPrice: 60,
@@ -21,10 +21,10 @@ const ResinPrinterCostForm = ({ setResults }) => {
         fepLifespanPrints: 50,
         avgPrintHours: 4,
         failureRate: 15,
-        annualMaintenanceCost: 30,
+        annualMaintenanceCost: 90,
         electricityPrice: 0.15,
         printerPowerKWh: 0.05,
-        washCureStationValue: 0,
+        washCureStationValue: 279,
         washStationWatts: 0,
         curingStationWatts: 20,
     });
